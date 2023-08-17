@@ -1,0 +1,92 @@
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// schema.prisma
+
+model Organization {
+  id           String     @id @default(uuid())
+  name         String
+  description  String
+  campaigns    Campaign[]
+  organizationUsers OrganizationUser[]
+}
+
+model User {
+  id           String       @id @default(uuid())
+  firstName    String
+  lastName     String
+  email        String    @unique
+  username     String    @unique
+  password     String
+  donations    Donation[]
+  registrations VolunteerRegistration[]
+  organizationUsers OrganizationUser[]
+  likedCampaigns Campaign[]
+  shares       Share[]
+}
+
+model Campaign {
+  id           String      @id @default(uuid())
+  title        String
+  description  String
+  startDate    DateTime
+  endDate      DateTime
+  organization Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+  donations    Donation[]
+  registrations VolunteerRegistration[]
+  likes        User[]    
+  shares       Share[]
+}
+
+model Donation {
+  id           String       @id @default(uuid())
+  user         User      @relation(fields: [userId], references: [id])
+  campaign     Campaign  @relation(fields: [campaignId], references: [id])
+  userId       String
+  campaignId   String
+  amount       Float
+  createdAt    DateTime  @default(now())
+}
+
+model VolunteerRegistration {
+  id           String       @id @default(uuid())
+  user         User      @relation(fields: [userId], references: [id])
+  campaign     Campaign  @relation(fields: [campaignId], references: [id])
+  userId       String
+  campaignId   String
+  createdAt    DateTime  @default(now())
+}
+
+model OrganizationUser {
+  id           String       @id @default(uuid())
+  user         User      @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+  userId       String
+  organizationId String
+}
+
+model Share {
+  id           String       @id @default(uuid())
+  user         User      @relation(fields: [userId], references: [id])
+  campaign     Campaign  @relation(fields: [campaignId], references: [id])
+  userId       String
+  campaignId   String
+  createdAt    DateTime  @default(now())
+}
+
+
+
+
+
+
+
+
