@@ -1,0 +1,57 @@
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model FoodBank {
+  id               String                @id @default(uuid())
+  name             String
+  description      String
+  address          String?
+  city             String?
+  state            String?
+  website          String?
+  shares       Share[]
+ 
+}
+
+model User {
+  id                String                  @id @default(uuid())
+  firstName         String
+  lastName          String
+  email             String             @unique
+  username          String             @unique
+  password          String
+  shares       Share[]
+   }
+
+
+model Share {
+  id           String       @id @default(uuid())
+  user         User      @relation(fields: [userId], references: [id])
+  foodBank    FoodBank  @relation(fields: [foodBankId], references: [id])
+  userId       String
+  foodBankId   String
+  createdAt    DateTime  @default(now())
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
