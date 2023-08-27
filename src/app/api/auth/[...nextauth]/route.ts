@@ -1,4 +1,4 @@
-import { compare } from "bcrypt"
+import bcrypt from "bcrypt"
 import NextAuth, { type NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials.password) {
-          return null
+          throw new Error("Please enter an email and password")
         }
 
         const user = await prisma.user.findUnique({
@@ -30,17 +30,17 @@ export const authOptions: NextAuthOptions = {
           },
         })
 
-        if (!user) {
-          return null
+        if (!user || !user?.hashedPassword) {
+          throw new Error("No user found")
         }
 
-        const isPasswordValid = await compare(
+        const isPasswordValid = await bcrypt.compare(
           credentials.password,
-          user.password
+          user.hashedPassword
         )
 
         if (!isPasswordValid) {
-          return null
+          throw new Error("Incorrect password")
         }
 
         return {
@@ -72,6 +72,7 @@ export const authOptions: NextAuthOptions = {
       return token
     },
   },
+  debug: process.env.NODE_ENV === "development",
 }
 
 const handler = NextAuth(authOptions)
