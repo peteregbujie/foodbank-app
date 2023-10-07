@@ -21,7 +21,7 @@ const SearchBar = () => {
 
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute left-3 top-2 h-6 w-6 text-gray-700"
+        className="absolute left-3 top-2 h-6 w-6 text-gray-900"
         viewBox="0 0 20 20"
         fill="currentColor"
       >
