@@ -1,11 +1,12 @@
 import "./global.css"
 
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import { getServerSession } from "next-auth"
+import { Inter } from "next/font/google"
 
 import SessionProvider from "@/components/SessionProvider"
 
+import Navbar from "@/components/Navbar"
 import ToasterContext from "./context/ToasterContext"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -26,6 +27,7 @@ export default async function RootLayout({
       <body className={inter.className}>
         <SessionProvider session={session}>
           <ToasterContext />
+          <Navbar />
           {children}
         </SessionProvider>
       </body>
